@@ -6,12 +6,12 @@
 		<artifactId>oss-parent</artifactId>
 		<version>5</version>
 	</parent>
-	<groupId>io.github.kostaskougios</groupId>
-	<artifactId>cloning</artifactId>
+	<groupId>com.dominikcebula.cloning</groupId>
+	<artifactId>kostaskougios-cloning</artifactId>
 	<packaging>bundle</packaging>
-	<version>1.10.1</version>
+	<version>1.10.1.1</version>
 	<name>cloning</name>
-	<url>https://code.google.com/p/cloning/</url>
+	<url>https://github.com/dominikcebula/cloning</url>
 	<description><![CDATA[
                 The cloning library is a small, open source (Apache
                 licensed) Java library which deep-clones objects. The
@@ -21,6 +21,8 @@
                 implementations, if you don't want the cached object
                 to be modified or whenever you want to create a deep
                 copy of an object.
+
+                This version contains a workaround for Java 8 Lambda Cloning Issue (not a proper solution).
         ]]></description>
 	<licenses>
 		<license>
@@ -32,14 +34,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<scm>
-		<connection>scm:git:https://kostas.kougios@code.google.com/p/cloning/</connection>
-		<developerConnection>scm:git:https://kostas.kougios@code.google.com/p/cloning/</developerConnection>
-		<url>https://code.google.com/p/cloning/source/browse/</url>
+		<connection>scm:git:https://github.com/dominikcebula/cloning.git</connection>
+		<developerConnection>scm:git:https://github.com/dominikcebula/cloning.git</developerConnection>
+		<url>https://github.com/dominikcebula/cloning</url>
 	</scm>
-	<issueManagement>
-		<system>Google Code</system>
-		<url>https://code.google.com/p/cloning/issues/list</url>
-	</issueManagement>
 	<build>
 		<plugins>
 			<plugin>
