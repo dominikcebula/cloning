@@ -13,6 +13,15 @@ MyClass clone=cloner.deepClone(o);
 // clone is a deep-clone of o
 ```
 
+To add this library as a dependency to your project in maven, use:
+```
+<dependency>
+  <groupId>com.dominikcebula.cloning</groupId>
+  <artifactId>kostaskougios-cloning</artifactId>
+  <version>1.10.1.1</version>
+</dependency>
+```
+
 ## Summary ##
 The cloning library is a small, open source (Apache licensed) Java library which deep-clones objects. The objects don't have to implement the Cloneable interface. Effectively, this library can clone ANY Java object. It can be used i.e. in cache implementations if you don't want the cached object to be modified or whenever you want to create a deep copy of objects.
 
