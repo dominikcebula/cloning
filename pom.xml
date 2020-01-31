@@ -30,6 +30,19 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 		</license>
 	</licenses>
+	<developers>
+		<developer>
+			<name>Kostas Kougios</name>
+			<organization>Kostas Kougios</organization>
+			<organizationUrl>https://github.com/kostaskougios</organizationUrl>
+		</developer>
+		<developer>
+			<name>Dominik Cebula</name>
+			<email>dominikcebula@gmail.com</email>
+			<organization>Dominik Cebula</organization>
+			<organizationUrl>http://dominikcebula.com/</organizationUrl>
+		</developer>
+	</developers>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -38,6 +51,18 @@
 		<developerConnection>scm:git:https://github.com/dominikcebula/cloning.git</developerConnection>
 		<url>https://github.com/dominikcebula/cloning</url>
 	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -87,12 +112,15 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.4.2</version>
-			</plugin>
-			<plugin>
-				<artifactId>maven-repository-plugin</artifactId>
-				<version>2.3.1</version>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.8</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
