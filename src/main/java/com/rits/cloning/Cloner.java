@@ -1,19 +1,14 @@
 package com.rits.cloning;
 
-import org.objenesis.instantiator.ObjectInstantiator;
-
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URI;
-import java.net.URL;
+import java.lang.reflect.*;
+import java.math.*;
+import java.net.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.*;
 import java.util.regex.Pattern;
+
+import org.objenesis.instantiator.ObjectInstantiator;
 
 /**
  * Cloner: deep clone objects.
@@ -54,6 +49,7 @@ public class Cloner {
 	private boolean cloningEnabled = true;
 	private boolean nullTransient = false;
 	private boolean cloneSynthetics = true;
+	private boolean ignoreJava8LambdaCloningException = false;
 
 	public Cloner() {
 		this.instantiationStrategy = ObjenesisInstantiationStrategy.getInstance();
@@ -624,7 +620,7 @@ public class Cloner {
 				if (dumpCloned != null) {
 					dumpCloned.startCloning(o.getClass());
 				}
-				@SuppressWarnings("unchecked") T newInstance = (T) instantiator.newInstance();
+				@SuppressWarnings("unchecked") T newInstance = tryNewInstanceOrGetShallowClone(o);
 				if (clones != null) {
 					clones.put(o, newInstance);
 					for (int i = 0; i < numFields; i++) {
@@ -648,6 +644,31 @@ public class Cloner {
 				throw new CloningException(e);
 			}
 		}
+
+		private <T> T tryNewInstanceOrGetShallowClone(T o)
+		{
+			try
+			{
+				return (T) instantiator.newInstance();
+			}
+			catch (NoClassDefFoundError e)
+			{
+				if (!ignoreJava8LambdaCloningException || !isJava8LambdaCloningIssue(e))
+				{
+					throw e;
+				}
+				else
+				{
+					return o;
+				}
+			}
+		}
+
+		private boolean isJava8LambdaCloningIssue(NoClassDefFoundError e)
+		{
+         String message = e.getMessage();
+         return message.contains("$") && message.contains("/");
+		}
 	}
 
 	private Object applyCloningStrategy(Map<Object, Object> clones, Object o, Object fieldObject, Field field) {
@@ -663,6 +684,11 @@ public class Cloner {
 
 	private boolean isAnonymousParent(final Field field) {
 		return "this$0".equals(field.getName());
+	}
+
+	public void setIgnoreJava8LambdaCloningException(boolean ignoreJava8LambdaCloningException)
+	{
+		this.ignoreJava8LambdaCloningException = ignoreJava8LambdaCloningException;
 	}
 
 	/**

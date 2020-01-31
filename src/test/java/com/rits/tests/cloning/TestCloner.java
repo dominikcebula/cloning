@@ -12,6 +12,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Function;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -789,5 +790,38 @@ public class TestCloner extends TestCase {
 		Assert.assertArrayEquals(list.toArray(), cloned.toArray());
 		assertNotSame(list, cloned);
 		assertNotSame(list.peek(), cloned.peek());
+	}
+
+	public void testJava8LambdaCloneWhenCloningExceptionIsNotIgnored() {
+		Java8LambdaExample java8LambdaExample = new Java8LambdaExample();
+
+		try
+		{
+			cloner.deepClone(java8LambdaExample);
+
+			fail("Java 8 Lambda Clone should fail when cloning issues were not ignored");
+		}
+		catch (NoClassDefFoundError e)
+		{
+			assertTrue(e.getMessage().contains("com/rits/tests/cloning/TestCloner$Java8LambdaExample$$Lambda$1"));
+		}
+	}
+
+	public void testJava8LambdaCloneWhenCloningExceptionIsIgnored() {
+      Java8LambdaExample java8LambdaExample = new Java8LambdaExample();
+
+      cloner.setIgnoreJava8LambdaCloningException(true);
+      java8LambdaExample = cloner.deepClone(java8LambdaExample);
+
+      assertEquals(25, java8LambdaExample.calculatePower(5));
+	}
+
+	private static class Java8LambdaExample {
+		private Function<Integer, Integer> powerFnc = x -> x*x;
+
+		int calculatePower(int x)
+		{
+			return powerFnc.apply(x);
+		}
 	}
 }
